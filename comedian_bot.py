@@ -11,12 +11,19 @@ if not groq_api_key:
     raise ValueError("Missing GROQ_API_KEY in environment variables.")
 
 # Initialize the LLM
+try:
 llm = ChatGroq(
-    model="llama3-70b-8192",
+    model="llama-3.1-70b-versatile",
     temperature=0.9,
     api_key=groq_api_key,
 )
-
+except Exception:
+    # Fallback if the first model is unavailable or deprecated
+    llm = ChatGroq(
+        model="llama-3.1-8b-instant",
+        temperature=0.9,
+        api_key=groq_api_key,
+    )
 # Set up system prompt for a stand-up comedian style
 system_message = SystemMessage(
     content=(
